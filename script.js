@@ -77,7 +77,7 @@ async function loadDataFromSpreadsheet() {
             width: parseFloat(data.width) || 100,
             height: parseFloat(data.height) || 100,
             fill: data.color || 'skyblue',
-            stroke: 'black',
+            stroke: data.color || 'skyblue',
             strokeWidth: 2,
         }));
 
@@ -85,7 +85,7 @@ async function loadDataFromSpreadsheet() {
             text: data.name || '',
             fontSize: 18,
             fontFamily: 'Arial',
-            fill: 'black',
+            fill: 'white',
             padding: 5,
             y: parseFloat(data.height) || 100, // 四角形の下に表示
         }));
