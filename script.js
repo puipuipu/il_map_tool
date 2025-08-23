@@ -16,6 +16,15 @@ const stage = new Konva.Stage({
 const gridLayer = new Konva.Layer();
 const mainLayer = new Konva.Layer();
 stage.add(gridLayer, mainLayer);
+const mapCenterX = MAP_WIDTH / 2;
+const mapCenterY = MAP_HEIGHT / 2;
+
+// 画面の中心にマップの中心がくるようにステージの位置を調整
+const initialX = window.innerWidth / 2 - mapCenterX;
+const initialY = window.innerHeight / 2 - mapCenterY;
+
+stage.x(initialX);
+stage.y(initialY);
 
 // 1. 9000x9000のマス目（グリッド）を描画
 const gridSize = 1; // 1マスのサイズ
