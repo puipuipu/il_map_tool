@@ -18,7 +18,7 @@ const mainLayer = new Konva.Layer();
 stage.add(gridLayer, mainLayer);
 
 // 1. 9000x9000のマス目（グリッド）を描画
-const gridSize = 100; // 1マスのサイズ
+const gridSize = 1; // 1マスのサイズ
 // 縦線
 for (let i = 0; i <= MAP_WIDTH / gridSize; i++) {
     gridLayer.add(new Konva.Line({
