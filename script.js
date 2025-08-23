@@ -53,9 +53,8 @@ const ring = new Konva.Arc({
     outerRadius: 1200, // 外側の半径
     angle: 90,         // 角度（90度分）
     rotation: 45,      // 開始角度（45度回転）
-    fill: 'rgba(255, 105, 180, 0.5)', // 色をピンクに
-    stroke: 'deeppink',
-    strokeWidth: 4,
+    stroke: 'black',
+    strokeWidth: 2,
 });
 mainLayer.add(ring);
 
