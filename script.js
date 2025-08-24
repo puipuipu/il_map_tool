@@ -97,11 +97,15 @@ async function loadDataFromSpreadsheet() {
             console.log('デバッグ：画像を描画します→', data.imageUrl);
 
             Konva.Image.fromURL(data.imageUrl, (imageNode) => {
+                const imageWidth = parseFloat(data.width) || 100;
+                const imageHeight = parseFloat(data.height) || 100;
+
                 imageNode.setAttrs({
-                    x: parseFloat(data.x),
-                    y: parseFloat(data.y),
-                    width: parseFloat(data.width) || 100,
-                    height: parseFloat(data.height) || 100,
+                    // 画像の中心がスプレッドシートの座標に来るように計算します！
+                    x: parseFloat(data.x) - imageWidth / 2,
+                    y: parseFloat(data.y) - imageHeight / 2,
+                    width: imageWidth,
+                    height: imageHeight,
                 });
                 mainLayer.add(imageNode);
                 console.log('デバッグ：画像の描画に成功', data.imageUrl);
@@ -111,7 +115,7 @@ async function loadDataFromSpreadsheet() {
             });
         });
     } catch (error) {
-        console.error('デバッグ：画像データの読み込みでエラーです！', error);
+        console.error('デバッグ：画像データの読み込みでエラー', error);
     }
 }
 
