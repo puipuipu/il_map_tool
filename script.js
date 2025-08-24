@@ -59,56 +59,60 @@ const ring = new Konva.Arc({
 mainLayer.add(ring);
 
 
-// 3. スプレッドシートからデータを読み込んで描画
 async function loadDataFromSpreadsheet() {
-    console.log('データの読み込みを開始');
+    console.log('デバッグ：データの読み込みを開始');
 
-    // 四角形のデータを読み込み
-    const rects = await fetchCSV(RECT_CSV_URL);
-    rects.forEach(data => {
-        if (!data.x || !data.y) return; // 座標がないデータはスキップ
-
-        const group = new Konva.Group({
-            x: parseFloat(data.x),
-            y: parseFloat(data.y),
+    // 四角形のデータを読み込みます！
+    try {
+        const rects = await fetchCSV(RECT_CSV_URL);
+        console.log('デバッグ：四角形データを取得', rects);
+        rects.forEach(data => {
+            if (!data.x || !data.y) return;
+            const group = new Konva.Group({ x: parseFloat(data.x), y: parseFloat(data.y) });
+            group.add(new Konva.Rect({
+                width: parseFloat(data.width) || 100, height: parseFloat(data.height) || 100,
+                fill: data.color || '#213245', stroke: '#4c73c9', strokeWidth: 2,
+            }));
+            group.add(new Konva.Text({
+                text: data.name || '', fontSize: 18, fontFamily: 'Arial',
+                fill: 'white', padding: 5, y: parseFloat(data.height) || 100,
+            }));
+            mainLayer.add(group);
         });
+    } catch (error) {
+        console.error('デバッグ：四角形データの読み込みでエラー', error);
+    }
 
-        group.add(new Konva.Rect({
-            width: parseFloat(data.width) || 100,
-            height: parseFloat(data.height) || 100,
-            fill: data.color || 'skyblue',
-            stroke: data.color || 'skyblue',
-            strokeWidth: 2,
-        }));
+    // 画像のデータを読み込みます！
+    try {
+        const images = await fetchCSV(IMAGE_CSV_URL);
+        console.log('デバッグ：画像データを取得', images);
 
-        group.add(new Konva.Text({
-            text: data.name || '',
-            fontSize: 18,
-            fontFamily: 'Arial',
-            fill: 'white',
-            padding: 5,
-            y: parseFloat(data.height) || 100, // 四角形の下に表示
-        }));
-        mainLayer.add(group);
-    });
+        images.forEach(data => {
+            // imageUrlが空、またはx,yが不正なデータはスキップします
+            if (!data.imageUrl || !data.x || !data.y) {
+                console.log('デバッグ：不正な画像データ行をスキップしました', data);
+                return;
+            }
+            console.log('デバッグ：画像を描画します→', data.imageUrl);
 
-    // 画像のデータを読み込み
-    const images = await fetchCSV(IMAGE_CSV_URL);
-    images.forEach(data => {
-        if (!data.x || !data.y || !data.imageUrl) return;
-
-        Konva.Image.fromURL(data.imageUrl, (imageNode) => {
-            imageNode.setAttrs({
-                x: parseFloat(data.x),
-                y: parseFloat(data.y),
-                width: parseFloat(data.width) || 100,
-                height: parseFloat(data.height) || 100,
+            Konva.Image.fromURL(data.imageUrl, (imageNode) => {
+                imageNode.setAttrs({
+                    x: parseFloat(data.x),
+                    y: parseFloat(data.y),
+                    width: parseFloat(data.width) || 100,
+                    height: parseFloat(data.height) || 100,
+                });
+                mainLayer.add(imageNode);
+                console.log('デバッグ：画像の描画に成功', data.imageUrl);
+            }, (err) => {
+                // 画像の読み込みに失敗した場合のエラー処理
+                console.error('デバッグ：画像の読み込みに失敗 URLを確認してください→', data.imageUrl, err);
             });
-            mainLayer.add(imageNode);
         });
-    });
-
-    console.log('データの描画が完了');
+    } catch (error) {
+        console.error('デバッグ：画像データの読み込みでエラーです！', error);
+    }
 }
 
 // CSVを読み込む関数
